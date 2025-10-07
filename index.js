@@ -27,7 +27,7 @@ hexo.extend.helper.register('renderQRCodeShare', function(options = {}) {
     type: (outputMode === 'canvas') ? 'canvas' : 'svg',
     shape: defaultConfig.shape || 'square',
     margin: options.margin !== undefined ? options.margin : (defaultConfig.margin || 4),
-    data: options.url || (this.config.url + this.url),
+    data: options.url || (this.url),
     qrOptions: {
       typeNumber: defaultConfig.qrOptions?.typeNumber || 0,
       mode: defaultConfig.qrOptions?.mode || 'Byte',
