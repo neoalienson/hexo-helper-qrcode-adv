@@ -12,7 +12,7 @@ global.hexo = {
 };
 
 // Override the helper for testing
-hexo.extend.helper.register('renderQRCodeShare', function(options = {}) {
+hexo.extend.helper.register('renderQRCode', function(options = {}) {
   const { url, size = 200, margin = 4, color = { dark: '#000000', light: '#FFFFFF' }, image } = options;
   const targetUrl = url || (this.config.url + this.url);
   
@@ -45,14 +45,14 @@ hexo.extend.helper.register('renderQRCodeShare', function(options = {}) {
   }
 });
 
-describe('renderQRCodeShare', function() {
+describe('renderQRCode', function() {
   const mockContext = {
     config: { url: 'https://example.com' },
     url: '/test-page'
   };
 
   it('should generate QR code with default options', function() {
-    const result = hexo.extend.helper.renderQRCodeShare.call(mockContext);
+    const result = hexo.extend.helper.renderQRCode.call(mockContext);
     
     expect(result).to.be.a('string');
     expect(result).to.include('<svg');
@@ -61,7 +61,7 @@ describe('renderQRCodeShare', function() {
   });
 
   it('should use custom URL when provided', function() {
-    const result = hexo.extend.helper.renderQRCodeShare.call(mockContext, {
+    const result = hexo.extend.helper.renderQRCode.call(mockContext, {
       url: 'https://custom.com'
     });
     
@@ -70,7 +70,7 @@ describe('renderQRCodeShare', function() {
   });
 
   it('should apply custom size', function() {
-    const result = hexo.extend.helper.renderQRCodeShare.call(mockContext, {
+    const result = hexo.extend.helper.renderQRCode.call(mockContext, {
       size: 300
     });
     
@@ -79,7 +79,7 @@ describe('renderQRCodeShare', function() {
   });
 
   it('should handle errors gracefully', function() {
-    const result = hexo.extend.helper.renderQRCodeShare.call(mockContext, {
+    const result = hexo.extend.helper.renderQRCode.call(mockContext, {
       url: 'error-test'
     });
     

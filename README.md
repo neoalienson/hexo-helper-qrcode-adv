@@ -24,20 +24,20 @@ npm install canvas
 
 ## Usage
 
-Use the `renderQRCodeShare()` helper in your EJS templates. The helper supports three output modes:
+Use the `renderQRCode()` helper in your EJS templates. The helper supports three output modes:
 - **Inline SVG** (default): Returns SVG markup directly
 - **Canvas**: Returns base64 PNG as img tag (requires canvas dependency)
 - **File**: Saves to `public/qr/` directory and returns img tag
 
 ### Basic Usage
 ```ejs
-<%- renderQRCodeShare() %>
+<%- renderQRCode() %>
 ```
 
 ### With Options
 ```ejs
-<%- renderQRCodeShare({
-  url: 'https://example.com',
+<%- renderQRCode({
+  data: 'https://example.com',
   size: 300,
   margin: 2,
   color: {
@@ -103,7 +103,8 @@ qrcode:
 
 The helper accepts these options (override config defaults):
 
-- `url` (string): URL to encode. Defaults to current page URL
+- `data` (string): Data to encode in QR code. Defaults to current page URL
+- `url` (string): Alias for data (for backward compatibility)
 - `size` (number): Sets both width and height. Overrides config width/height
 - `margin` (number): Margin around QR code
 - `output` (string): Output mode - 'inline' (SVG), 'canvas' (PNG), or 'file' (saved image)
@@ -115,15 +116,15 @@ The helper accepts these options (override config defaults):
 
 ### Basic with custom colors
 ```ejs
-<%- renderQRCodeShare({
+<%- renderQRCode({
   color: { dark: '#4267b2', light: '#e9ebee' }
 }) %>
 ```
 
 ### Styled QR code
 ```ejs
-<%- renderQRCodeShare({
-  url: 'https://example.com',
+<%- renderQRCode({
+  data: 'https://example.com',
   size: 250,
   margin: 10
 }) %>
@@ -132,13 +133,13 @@ The helper accepts these options (override config defaults):
 ### Output modes
 ```ejs
 <!-- Inline SVG (default) -->
-<%- renderQRCodeShare({ output: 'inline' }) %>
+<%- renderQRCode({ output: 'inline' }) %>
 
 <!-- Canvas PNG -->
-<%- renderQRCodeShare({ output: 'canvas' }) %>
+<%- renderQRCode({ output: 'canvas' }) %>
 
 <!-- Saved file -->
-<%- renderQRCodeShare({ output: 'file' }) %>
+<%- renderQRCode({ output: 'file' }) %>
 ```
 
 ## Configuration Options Reference

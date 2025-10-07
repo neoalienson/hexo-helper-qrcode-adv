@@ -13,7 +13,7 @@ try {
   nodeCanvas = null;
 }
 
-hexo.extend.helper.register('renderQRCodeShare', function(options = {}) {
+hexo.extend.helper.register('renderQRCode', function(options = {}) {
   // Get default config from _config.yml
   const defaultConfig = this.config.qrcode || {};
   
@@ -27,7 +27,7 @@ hexo.extend.helper.register('renderQRCodeShare', function(options = {}) {
     type: (outputMode === 'canvas') ? 'canvas' : 'svg',
     shape: defaultConfig.shape || 'square',
     margin: options.margin !== undefined ? options.margin : (defaultConfig.margin || 4),
-    data: options.url || (this.url),
+    data: options.data || options.url || (this.config.url + this.path),
     qrOptions: {
       typeNumber: defaultConfig.qrOptions?.typeNumber || 0,
       mode: defaultConfig.qrOptions?.mode || 'Byte',
