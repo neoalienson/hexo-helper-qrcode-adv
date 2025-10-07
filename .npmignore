@@ -1,0 +1,25 @@
+# Test files
+test/
+*.test.js
+
+# Development files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Git
+.git/
+.gitignore
+
+# Example files
+example-config.yml
+
+# Logs
+*.log
+npm-debug.log*

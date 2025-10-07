@@ -1,16 +1,28 @@
 {
   "name": "hexo-helper-qrcode-adv",
   "version": "1.0.0",
-  "description": "Advanced QR code helper for Hexo that generates QR codes for page sharing",
+  "description": "Advanced QR code helper for Hexo that generates QR codes for page sharing with extensive styling options",
   "main": "index.js",
   "keywords": [
     "hexo",
     "qrcode",
     "helper",
-    "share"
+    "share",
+    "qr-code-styling",
+    "svg",
+    "canvas",
+    "generator"
   ],
-  "author": "",
+  "author": "Neo Alienson <neo@01man.com>",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/neoalienson/hexo-helper-qrcode-adv.git"
+  },
+  "bugs": {
+    "url": "https://github.com/neoalienson/hexo-helper-qrcode-adv/issues"
+  },
+  "homepage": "https://github.com/neoalienson/hexo-helper-qrcode-adv#readme",
   "scripts": {
     "test": "mocha test/*.test.js"
   },
@@ -28,5 +40,14 @@
   },
   "peerDependencies": {
     "hexo": ">=3.0.0"
-  }
+  },
+  "engines": {
+    "node": ">=12.0.0"
+  },
+  "files": [
+    "index.js",
+    "README.md",
+    "LICENSE",
+    "CHANGELOG.md"
+  ]
 }
