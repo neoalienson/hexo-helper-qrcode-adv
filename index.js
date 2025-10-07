@@ -27,7 +27,7 @@ hexo.extend.helper.register('renderQRCode', function(options = {}) {
     type: (outputMode === 'canvas') ? 'canvas' : 'svg',
     shape: defaultConfig.shape || 'square',
     margin: options.margin !== undefined ? options.margin : (defaultConfig.margin || 4),
-    data: options.data || options.url || (this.config.url + this.path),
+    data: options.data || options.url || (this.config.url + '/' + this.path),
     qrOptions: {
       typeNumber: defaultConfig.qrOptions?.typeNumber || 0,
       mode: defaultConfig.qrOptions?.mode || 'Byte',
@@ -109,9 +109,9 @@ hexo.extend.helper.register('renderQRCode', function(options = {}) {
           .then(buffer => {
             if (config.type === 'canvas') {
               const base64 = buffer.toString('base64');
-              callback(null, `<img src="data:image/png;base64,${base64}" width="${config.width}" height="${config.height}" alt="QR Code" />`);
+              callback(null, `<img src="data:image/png;base64,${base64}" width="${config.width}" height="${config.height}" alt="QR Code for ${config.data}" />`);
             } else {
-              callback(null, buffer.toString());
+              callback(null, `<!-- QR Code for ${config.data} -->` + buffer.toString());
             }
           })
           .catch(error => {
