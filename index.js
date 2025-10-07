@@ -79,7 +79,7 @@ hexo.extend.helper.register('renderQRCode', function(options = {}) {
       const webPath = `/qr/${filename}`;
       
       if (fs.existsSync(filePath)) {
-        return `<img src="${webPath}" width="${config.width}" height="${config.height}" alt="QR Code" />`;
+        return `<img src="${webPath}" width="${config.width}" height="${config.height}" alt="QR Code for ${config.data}" />`;
       }
       
       const getRawDataSync = deasync(function(callback) {
@@ -96,7 +96,7 @@ hexo.extend.helper.register('renderQRCode', function(options = {}) {
       
       try {
         const savedPath = getRawDataSync();
-        return `<img src="${savedPath}" width="${config.width}" height="${config.height}" alt="QR Code" />`;
+        return `<img src="${savedPath}" width="${config.width}" height="${config.height}" alt="QR Code for ${config.data}" />`;
       } catch (error) {
         console.error('QR: File save failed:', error);
         return `<div class="qr-error">QR Code generation failed</div>`;
