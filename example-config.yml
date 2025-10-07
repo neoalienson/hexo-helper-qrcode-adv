@@ -1,0 +1,62 @@
+# Example _config.yml QR code configuration
+qrcode:
+  # Basic settings
+  width: 300
+  height: 300
+  type: svg  # Only 'svg' supported
+  shape: square  # 'square' or 'circle'
+  margin: 4
+  
+  # Optional center image
+  # image: https://example.com/logo.png
+  
+  # QR code generation options
+  qrOptions:
+    typeNumber: 0  # 0-40, 0 = auto
+    mode: Byte  # 'Numeric', 'Alphanumeric', 'Byte', 'Kanji'
+    errorCorrectionLevel: M  # 'L', 'M', 'Q', 'H'
+  
+  # Dot styling
+  dotsOptions:
+    color: '#000000'
+    type: rounded  # 'rounded', 'dots', 'classy', 'classy-rounded', 'square', 'extra-rounded'
+    roundSize: true
+    # Optional gradient
+    # gradient:
+    #   type: linear
+    #   rotation: 0
+    #   colorStops:
+    #     - offset: 0
+    #       color: '#000000'
+    #     - offset: 1
+    #       color: '#333333'
+  
+  # Background styling
+  backgroundOptions:
+    color: '#FFFFFF'
+    # Optional gradient
+    # gradient:
+    #   type: radial
+    #   colorStops:
+    #     - offset: 0
+    #       color: '#FFFFFF'
+    #     - offset: 1
+    #       color: '#F0F0F0'
+  
+  # Corner squares styling
+  cornersSquareOptions:
+    color: '#000000'
+    type: extra-rounded  # 'dot', 'square', 'extra-rounded', 'rounded', 'dots', 'classy', 'classy-rounded'
+  
+  # Corner dots styling
+  cornersDotOptions:
+    color: '#000000'
+    type: rounded  # 'dot', 'square', 'rounded', 'dots', 'classy', 'classy-rounded', 'extra-rounded'
+  
+  # Image options (when using center image)
+  imageOptions:
+    hideBackgroundDots: true
+    imageSize: 0.4  # 0-1, max 0.5 recommended
+    margin: 0
+    crossOrigin: anonymous  # 'anonymous' or 'use-credentials'
+    saveAsBlob: true

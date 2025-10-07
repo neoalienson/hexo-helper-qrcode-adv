@@ -1,0 +1,33 @@
+{
+  "name": "hexo-helper-qrcode-adv",
+  "version": "1.0.0",
+  "description": "Advanced QR code helper for Hexo that generates QR codes for page sharing",
+  "main": "index.js",
+  "keywords": [
+    "hexo",
+    "qrcode",
+    "helper",
+    "share"
+  ],
+  "author": "",
+  "license": "MIT",
+  "scripts": {
+    "test": "mocha test/*.test.js"
+  },
+  "dependencies": {
+    "qr-code-styling": "^1.6.0-rc.1",
+    "jsdom": "^22.1.0",
+    "deasync": "^0.1.29",
+    "node-fetch": "^2.7.0"
+  },
+  "optionalDependencies": {
+    "canvas": "^2.11.2"
+  },
+  "devDependencies": {
+    "mocha": "^10.2.0",
+    "chai": "^4.3.10"
+  },
+  "peerDependencies": {
+    "hexo": ">=3.0.0"
+  }
+}
