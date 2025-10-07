@@ -86,36 +86,5 @@ describe('renderQRCodeShare', function() {
     expect(result).to.equal('<div class="qr-error">QR Code generation failed</div>');
   });
 
-  it('should generate QR code with valid image', function() {
-    const result = hexo.extend.helper.renderQRCodeShare.call(mockContext, {
-      image: 'https://valid-image.com/logo.png',
-      size: 250
-    });
-    
-    expect(result).to.be.a('string');
-    expect(result).to.include('<svg');
-    expect(result).to.include('width="250"');
-    expect(result).to.include('WITH_IMAGE');
-    expect(result).to.include('</svg>');
-  });
 
-  it('should handle invalid image URL gracefully', function() {
-    // Suppress console.warn for this test
-    const originalWarn = console.warn;
-    console.warn = () => {};
-    
-    const result = hexo.extend.helper.renderQRCodeShare.call(mockContext, {
-      image: 'https://invalid-image.com/404.png',
-      size: 200
-    });
-    
-    expect(result).to.be.a('string');
-    expect(result).to.include('<svg');
-    expect(result).to.include('width="200"');
-    expect(result).to.not.include('WITH_IMAGE'); // No image should be included
-    expect(result).to.include('</svg>');
-    
-    // Restore console.warn
-    console.warn = originalWarn;
-  });
 });

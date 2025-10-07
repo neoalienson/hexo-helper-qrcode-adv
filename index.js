@@ -1,17 +1,30 @@
 const { QRCodeStyling } = require('qr-code-styling/lib/qr-code-styling.common.js');
 const { JSDOM } = require('jsdom');
-const fetch = require('node-fetch');
 const deasync = require('deasync');
+const fs = require('fs');
+const path = require('path');
+const crypto = require('crypto');
+
+// Try to load canvas, fallback if not available
+let nodeCanvas;
+try {
+  nodeCanvas = require('canvas');
+} catch (error) {
+  nodeCanvas = null;
+}
 
 hexo.extend.helper.register('renderQRCodeShare', function(options = {}) {
   // Get default config from _config.yml
   const defaultConfig = this.config.qrcode || {};
   
+  // Determine output mode: 'inline', 'canvas', or 'file'
+  const outputMode = options.output || defaultConfig.output || 'inline';
+  
   // Merge options with defaults
   const config = {
     width: options.size || defaultConfig.width || 200,
     height: options.size || defaultConfig.height || 200,
-    type: 'svg', // Force SVG type (canvas not supported in Node.js without canvas dependency)
+    type: (outputMode === 'canvas') ? 'canvas' : 'svg',
     shape: defaultConfig.shape || 'square',
     margin: options.margin !== undefined ? options.margin : (defaultConfig.margin || 4),
     data: options.url || (this.config.url + this.url),
@@ -35,83 +48,83 @@ hexo.extend.helper.register('renderQRCodeShare', function(options = {}) {
     jsdom: JSDOM
   };
   
-  // Handle image with base64 conversion for Node.js compatibility
-  const imageUrl = options.image || defaultConfig.image;
-  if (imageUrl) {
-    console.log('QR: Processing image URL:', imageUrl);
-    try {
-      // Convert image to base64 synchronously
-      let imageData;
-      let fetchDone = false;
-      
-      console.log('QR: Starting image fetch...');
-      fetch(imageUrl)
-        .then(response => {
-          console.log('QR: Image fetch response status:', response.status);
-          return response.buffer();
-        })
-        .then(buffer => {
-          console.log('QR: Image buffer received, size:', buffer.length);
-          const base64 = buffer.toString('base64');
-          const mimeType = imageUrl.includes('.svg') ? 'image/svg+xml' : 'image/png';
-          imageData = `data:${mimeType};base64,${base64}`;
-          console.log('QR: Image converted to base64, type:', mimeType);
-          fetchDone = true;
-        })
-        .catch(error => {
-          console.warn('QR: Failed to fetch image:', error.message);
-          fetchDone = true;
-        });
-      
-      deasync.loopWhile(() => !fetchDone);
-      
-      // Only add image to config if successfully converted to base64
-      if (imageData) {
-        console.log('QR: Adding image to config');
-        config.image = imageData;
-        config.imageOptions = {
-          hideBackgroundDots: defaultConfig.imageOptions?.hideBackgroundDots !== undefined ? defaultConfig.imageOptions.hideBackgroundDots : true,
-          imageSize: defaultConfig.imageOptions?.imageSize || 0.4,
-          margin: defaultConfig.imageOptions?.margin || 0,
-          saveAsBlob: false,
-          ...options.imageOptions
-        };
-      } else {
-        console.log('QR: Image processing failed, proceeding without image');
-      }
-    } catch (error) {
-      console.warn('QR: Image processing failed:', error.message);
+  // Add canvas support if available and type is canvas
+  if (config.type === 'canvas') {
+    if (nodeCanvas) {
+      config.nodeCanvas = nodeCanvas;
+    } else {
+      console.warn('QR: Canvas type requested but canvas dependency not available, falling back to SVG');
+      config.type = 'svg';
     }
-  } else {
-    console.log('QR: No image URL provided');
   }
+  
+
   
   try {
     const qrCode = new QRCodeStyling(config);
-    console.log('QR: QRCodeStyling instance created successfully');
     
-    console.log('QR: Starting getRawData...');
-    
-    // Use deasync directly on the Promise
-    const getRawDataSync = deasync(function(callback) {
-      qrCode.getRawData('svg')
-        .then(buffer => {
-          console.log('QR: getRawData completed, buffer size:', buffer.length);
-          callback(null, buffer.toString());
-        })
-        .catch(error => {
-          console.error('QR: getRawData failed:', error);
-          callback(error);
-        });
-    });
-    
-    try {
-      const result = getRawDataSync();
-      console.log('QR: Generation completed');
-      return result;
-    } catch (error) {
-      console.error('QR: Sync getRawData failed:', error);
-      return `<div class="qr-error">QR Code generation failed</div>`;
+    if (outputMode === 'file') {
+      // File mode: Generate and save to file
+      const configHash = crypto.createHash('md5').update(JSON.stringify(config)).digest('hex');
+      const extension = config.type === 'canvas' ? 'png' : 'svg';
+      const filename = `qr-${configHash}.${extension}`;
+      
+      const publicDir = this.config.public_dir || 'public';
+      const qrDir = path.join(publicDir, 'qr');
+      if (!fs.existsSync(qrDir)) {
+        fs.mkdirSync(qrDir, { recursive: true });
+      }
+      
+      const filePath = path.join(qrDir, filename);
+      const webPath = `/qr/${filename}`;
+      
+      if (fs.existsSync(filePath)) {
+        return `<img src="${webPath}" width="${config.width}" height="${config.height}" alt="QR Code" />`;
+      }
+      
+      const getRawDataSync = deasync(function(callback) {
+        const outputType = config.type === 'canvas' ? 'png' : 'svg';
+        qrCode.getRawData(outputType)
+          .then(buffer => {
+            fs.writeFileSync(filePath, buffer);
+            callback(null, webPath);
+          })
+          .catch(error => {
+            callback(error);
+          });
+      });
+      
+      try {
+        const savedPath = getRawDataSync();
+        return `<img src="${savedPath}" width="${config.width}" height="${config.height}" alt="QR Code" />`;
+      } catch (error) {
+        console.error('QR: File save failed:', error);
+        return `<div class="qr-error">QR Code generation failed</div>`;
+      }
+    } else {
+      // Inline mode: Return SVG/canvas directly
+      const getRawDataSync = deasync(function(callback) {
+        const outputType = config.type === 'canvas' ? 'png' : 'svg';
+        qrCode.getRawData(outputType)
+          .then(buffer => {
+            if (config.type === 'canvas') {
+              const base64 = buffer.toString('base64');
+              callback(null, `<img src="data:image/png;base64,${base64}" width="${config.width}" height="${config.height}" alt="QR Code" />`);
+            } else {
+              callback(null, buffer.toString());
+            }
+          })
+          .catch(error => {
+            callback(error);
+          });
+      });
+      
+      try {
+        return getRawDataSync();
+      } catch (error) {
+        console.error('QR: Generation failed:', error);
+        return `<div class="qr-error">QR Code generation failed</div>`;
+      }
     }
   } catch (error) {
     console.error('QR: QRCodeStyling creation failed:', error);

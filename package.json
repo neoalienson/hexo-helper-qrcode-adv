@@ -17,8 +17,7 @@
   "dependencies": {
     "qr-code-styling": "^1.6.0-rc.1",
     "jsdom": "^22.1.0",
-    "deasync": "^0.1.29",
-    "node-fetch": "^2.7.0"
+    "deasync": "^0.1.29"
   },
   "optionalDependencies": {
     "canvas": "^2.11.2"
