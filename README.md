@@ -53,6 +53,7 @@ Add QR code styling options to your `_config.yml`:
 
 ```yaml
 qrcode:
+  enable: true  # Enable/disable QR code generation (default: true)
   width: 300
   height: 300
   output: inline  # 'inline', 'canvas', or 'file'
@@ -145,6 +146,7 @@ The helper accepts these options (override config defaults):
 ## Configuration Options Reference
 
 ### Basic Options
+- `enable` (boolean): Enable/disable QR code generation (default: true)
 - `width/height` (number): Canvas size in pixels
 - `output` (string): Output mode - 'inline' (SVG), 'canvas' (PNG), or 'file' (saved image)
 - `shape` (string): 'square' or 'circle'

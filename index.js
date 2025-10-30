@@ -17,6 +17,11 @@ hexo.extend.helper.register('renderQRCode', function(options = {}) {
   // Get default config from _config.yml
   const defaultConfig = this.config.qrcode || {};
   
+  // Check if QR code generation is enabled (default: true)
+  if (defaultConfig.enable === false) {
+    return '';
+  }
+  
   // Determine output mode: 'inline', 'canvas', or 'file'
   const outputMode = options.output || defaultConfig.output || 'inline';
   

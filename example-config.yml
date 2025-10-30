@@ -1,5 +1,8 @@
 # Example _config.yml QR code configuration
 qrcode:
+  # Enable/disable QR code generation (default: true)
+  enable: true
+  
   # Basic settings
   width: 300
   height: 300
