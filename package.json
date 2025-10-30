@@ -1,6 +1,6 @@
 {
   "name": "hexo-helper-qrcode-adv",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Advanced QR code helper for Hexo that generates QR codes for page sharing with extensive styling options",
   "main": "index.js",
   "keywords": [
